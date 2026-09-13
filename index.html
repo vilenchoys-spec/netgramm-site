@@ -1,0 +1,716 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>netgramm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg: #FAFAFB;
+    --surface: #FFFFFF;
+    --surface-2: #F1EFF3;
+    --ink: #17121D;
+    --muted: #5B5563;
+    --border: #E8E4EC;
+
+    /* Instagram brand gradient stops */
+    --ig-1: #FEDA75;
+    --ig-2: #FA7E1E;
+    --ig-3: #D62976;
+    --ig-4: #962FBF;
+    --ig-5: #4F5BD5;
+    --gradient-brand: linear-gradient(135deg, var(--ig-1) 0%, var(--ig-2) 28%, var(--ig-3) 55%, var(--ig-4) 78%, var(--ig-5) 100%);
+    /* contrast-safe subset for buttons carrying white text */
+    --gradient-cta: linear-gradient(120deg, #6D28D9 0%, #BE185D 55%, #C2410C 100%);
+    --accent: #C2255C;
+    --accent-2: #7C3AED;
+    --on-accent: #FFFFFF;
+    --success: #127A52;
+    --danger: #C23B4B;
+    --shadow: 0 1px 2px rgba(23,18,29,.05), 0 8px 20px -14px rgba(23,18,29,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg: #100C16;
+      --surface: #1B1522;
+      --surface-2: #241C2D;
+      --ink: #F3EFF7;
+      --muted: #B3A9BF;
+      --border: #332A3D;
+      --accent: #FF6FA0;
+      --accent-2: #B794F6;
+      --success: #3FD89B;
+      --danger: #FF6F7D;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg: #100C16;
+    --surface: #1B1522;
+    --surface-2: #241C2D;
+    --ink: #F3EFF7;
+    --muted: #B3A9BF;
+    --border: #332A3D;
+    --accent: #FF6FA0;
+    --accent-2: #B794F6;
+    --success: #3FD89B;
+    --danger: #FF6F7D;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    padding-inline: 16px;
+  }
+  ::selection{ background:var(--ig-3); color:#fff; }
+  a{ color:inherit; }
+  img{max-width:100%;}
+  h1,h2,h3{ font-family:'Lexend', ui-sans-serif, system-ui, sans-serif; font-weight:700; letter-spacing:-.01em; text-wrap:balance; margin:0; }
+  .grad-text{
+    background:var(--gradient-brand); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .wrap{ max-width:1120px; margin-inline:auto; }
+  section{ padding-block: clamp(48px, 8vw, 96px); }
+
+  .eyebrow{
+    font-family:'Lexend', ui-sans-serif, sans-serif;
+    font-weight:600;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:inline-flex; align-items:center; gap:.55em;
+    margin-bottom:1.1em;
+  }
+  .eyebrow::before{ content:""; width:.6em; height:.6em; border-radius:3px; background:var(--gradient-brand); flex:none; }
+
+  /* skip link */
+  .skip-link{
+    position:absolute; left:-9999px; top:0;
+    background:var(--ink); color:var(--bg);
+    padding:.7em 1.1em; border-radius:8px;
+    font-size:.85rem; text-decoration:none;
+    z-index:100;
+  }
+  .skip-link:focus{ left:16px; top:16px; position:fixed; }
+
+  /* header */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; padding-block:16px; }
+  .logo{ font-family:'Lexend', sans-serif; font-weight:700; font-size:1.1rem; letter-spacing:-.01em; text-decoration:none; }
+  .logo span{ background:var(--gradient-brand); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .btn{
+    display:inline-flex; align-items:center; gap:.5em;
+    font-family:'Lexend', ui-sans-serif, sans-serif; font-weight:600; font-size:.95rem;
+    padding:.75em 1.3em; border-radius:10px;
+    text-decoration:none; border:1px solid transparent;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .btn-primary{ background:var(--gradient-cta); color:var(--on-accent); box-shadow:var(--shadow); }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 10px 26px -10px color-mix(in srgb, var(--ig-3) 55%, transparent); }
+  .btn-ghost{ border-color:var(--border); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--accent); }
+  .btn-sm{ padding:.7em 1.2em; font-size:.88rem; min-height:44px; }
+
+  /* hero */
+  .hero{ padding-top: clamp(40px, 7vw, 72px); position:relative; overflow:hidden; }
+  .hero::before{
+    content:""; position:absolute; inset:-20% -10% auto auto; width:60vw; height:60vw; max-width:640px; max-height:640px;
+    background:var(--gradient-brand); opacity:.14; filter:blur(60px); border-radius:50%; z-index:-1;
+  }
+  .hero-grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px, 5vw, 64px); align-items:center; }
+  .hero h1{ font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height:1.1; }
+  .hero-sub{ margin-top:1.1em; color:var(--muted); font-size:1.05rem; max-width:48ch; }
+  .hero-cta{ display:flex; align-items:center; gap:1.2em; margin-top:2em; flex-wrap:wrap; }
+  .hero-note{ font-size:.86rem; color:var(--muted); line-height:1.5; min-width:0; }
+  .hero-badges{ margin-top:1.5em; }
+
+  /* USP banner */
+  .usp-banner{
+    display:flex; align-items:center; gap:.7em; margin-top:1.6em;
+    padding:.85em 1.1em; border-radius:12px;
+    background:var(--surface); border:1px solid var(--border);
+    position:relative;
+  }
+  .usp-banner::before{
+    content:""; position:absolute; inset:0; border-radius:12px; padding:1.5px;
+    background:var(--gradient-brand);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none;
+  }
+  .usp-banner .ico{ width:1.9em; height:1.9em; color:var(--accent); flex:none; }
+  .usp-banner strong{ font-family:'Lexend', sans-serif; font-weight:700; font-size:.95rem; }
+  .usp-banner span{ display:block; color:var(--muted); font-size:.85rem; margin-top:.15em; }
+
+  /* steps card (hero right column) */
+  .steps-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    box-shadow:var(--shadow); padding: clamp(20px,3vw,28px);
+  }
+  .steps-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.3em; }
+  .steps-card-head h3{ font-size:1.05rem; }
+  .steps-card-head .badge{
+    font-family:'Lexend', sans-serif; font-size:.72rem; font-weight:700;
+    padding:.35em .7em; border-radius:999px; color:#fff; background:var(--gradient-cta);
+  }
+  .step-row{ display:flex; align-items:flex-start; gap:1em; padding-block:.9em; border-top:1px solid var(--border); }
+  .step-row:first-of-type{ border-top:none; }
+  .step-num{
+    flex:none; width:2.1em; height:2.1em; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:'Lexend', sans-serif; font-weight:700; font-size:.9rem;
+    background:var(--surface-2); color:var(--ink);
+  }
+  .step-row.is-highlight .step-num{ background:var(--gradient-brand); color:#fff; }
+  .step-row h4{ font-family:'Lexend', sans-serif; font-weight:600; font-size:.95rem; margin:0 0 .25em; }
+  .step-row p{ margin:0; color:var(--muted); font-size:.86rem; }
+  .step-row.is-highlight p{ color:var(--ink); font-weight:600; }
+
+  /* section heads */
+  .section-head{ max-width:60ch; margin-bottom: clamp(28px, 4vw, 44px); }
+  .section-head h2{ font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .section-head p{ color:var(--muted); margin-top:.6em; }
+
+  /* process */
+  .process{ display:grid; grid-template-columns:repeat(5,1fr); gap: 1.2em; }
+  .proc-item{ text-align:left; display:flex; flex-direction:column; }
+  .proc-box{
+    width:3.4em; height:3.4em; border-radius:10px;
+    border:1.5px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center; margin-bottom:1em;
+  }
+  .proc-box svg{ width:1.6em; height:1.6em; color:var(--proc-c, var(--accent)); }
+  .proc-item.is-highlight .proc-box{ background:var(--gradient-brand); border-color:transparent; }
+  .proc-item.is-highlight .proc-box svg{ color:#fff; }
+  .proc-n{ font-family:'Lexend', sans-serif; font-size:.75rem; font-weight:600; color:var(--muted); margin-bottom:.4em; }
+  .proc-item h3{ font-size:1.02rem; }
+  .proc-item p{ margin:.4em 0 0; color:var(--muted); font-size:.87rem; }
+
+  /* form */
+  .form-section .section-head{ text-align:center; margin-inline:auto; }
+  .form-card{
+    max-width:640px; margin-inline:auto;
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    box-shadow:var(--shadow); padding:clamp(24px,4vw,40px);
+  }
+  .field{ margin-bottom:1.2em; }
+  .field-label{ display:block; font-family:'Lexend', sans-serif; font-weight:600; font-size:.85rem; color:var(--ink); margin-bottom:.5em; }
+  .field-label .opt{ color:var(--muted); font-weight:400; }
+  .field input, .field textarea{
+    width:100%; font-family:'Source Sans 3', ui-sans-serif, sans-serif; font-size:1rem; color:var(--ink);
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    padding:.85em 1em; resize:vertical;
+  }
+  .field textarea{ min-height:6.5em; }
+  .field input::placeholder, .field textarea::placeholder{ color:var(--muted); }
+  .field input:focus, .field textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .btn-block{ width:100%; justify-content:center; font-size:1rem; padding:.9em 1.3em; }
+  .form-consent{ display:block; text-align:center; margin-top:1em; font-size:.78rem; color:var(--muted); text-decoration:underline; text-underline-offset:2px; }
+  .form-status{ display:block; text-align:center; margin-top:.9em; font-size:.82rem; color:var(--success); min-height:1.2em; }
+
+  /* feature / included cards */
+  .features{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem; }
+  .feature{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:1.5em; box-shadow:var(--shadow);
+  }
+  .feature .ico{ width:2.1em; height:2.1em; color:var(--accent); margin-bottom:.8em; }
+  .feature h3{ font-size:1.05rem; }
+  .feature p{ margin:.5em 0 0; color:var(--muted); font-size:.92rem; }
+
+  /* pills (audience + situations) */
+  .pills{ display:flex; flex-wrap:wrap; gap:.6em; }
+  .pill{
+    font-family:'Lexend', ui-sans-serif, sans-serif; font-weight:500;
+    font-size:.86rem; padding:.55em 1.1em; border-radius:999px;
+    border:1px solid var(--border); color:var(--muted); background:var(--surface);
+  }
+  .pill-sm{ font-size:.78rem; padding:.45em .9em; }
+  .pill-brand{
+    color:var(--ink); font-weight:600; border-color:transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box, var(--gradient-brand) border-box;
+    border:1.5px solid transparent;
+  }
+
+  /* faq */
+  .faq{ max-width:760px; margin-inline:auto; display:flex; flex-direction:column; gap:.7em; }
+  .faq-item{ background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); overflow:hidden; }
+  .faq-item summary{
+    cursor:pointer; list-style:none; padding:1.1em 1.3em;
+    font-family:'Lexend', sans-serif; font-weight:600; font-size:.98rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1em;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{ content:"+"; font-weight:400; color:var(--accent); font-size:1.2rem; flex:none; transition:transform .2s ease; }
+  .faq-item[open] summary::after{ transform:rotate(45deg); }
+  .faq-item summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:8px; }
+  .faq-body{ padding:0 1.3em 1.2em; color:var(--muted); font-size:.92rem; }
+  @media (prefers-reduced-motion: reduce){ .faq-item summary::after{ transition:none; } }
+
+  /* testimonials */
+  .t-note{ font-size:.85rem; color:var(--muted); margin-top:-.4em; margin-bottom:1.6em; }
+  .testimonials{ display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+  .t-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:1.3em; box-shadow:var(--shadow);
+  }
+  .t-top{ display:flex; align-items:center; gap:.8em; margin-bottom:.9em; }
+  .avatar{
+    width:2.4em; height:2.4em; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Lexend',sans-serif; font-weight:700; font-size:.85rem; color:#fff; flex:none;
+    background:var(--gradient-brand);
+  }
+  .t-name{ font-family:'Lexend', ui-sans-serif, sans-serif; font-weight:700; font-size:.95rem; }
+  .t-handle{ font-size:.75rem; color:var(--muted); }
+  .t-body{ color:var(--ink); font-size:.93rem; }
+  .t-tag{ display:inline-block; margin-top:.9em; font-size:.72rem; font-weight:600; color:var(--success); }
+
+  /* final cta */
+  .cta-final{
+    background:var(--surface-2); border-radius:20px; padding:clamp(32px,6vw,64px);
+    text-align:center; display:flex; flex-direction:column; align-items:center; gap:1.1em;
+    position:relative; overflow:hidden;
+  }
+  .cta-final::before{
+    content:""; position:absolute; inset:auto -15% -60% auto; width:50vw; height:50vw; max-width:480px; max-height:480px;
+    background:var(--gradient-brand); opacity:.16; filter:blur(60px); border-radius:50%;
+  }
+  .cta-final h2{ font-size:clamp(1.7rem,3.6vw,2.4rem); max-width:20ch; position:relative; }
+  .cta-final p{ color:var(--muted); max-width:48ch; position:relative; }
+  .cta-final .btn{ position:relative; }
+
+  footer{ border-top:1px solid var(--border); padding-block:2.4em; margin-top:2em; }
+  .footer-inner{ display:flex; flex-direction:column; gap:.6em; color:var(--muted); font-size:.8rem; }
+
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .features{ grid-template-columns:1fr; }
+    .testimonials{ grid-template-columns:1fr; }
+    .process{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 480px){
+    .process{ grid-template-columns:1fr; }
+  }
+
+  /* scroll-reveal animation */
+  .reveal{
+    opacity:0; transform: translateY(18px);
+    transition: opacity .6s ease, transform .6s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible{ opacity:1; transform:none; }
+
+  /* animated brand-gradient glow */
+  .hero::before, .cta-final::before{
+    background-size:220% 220%;
+    animation: gradientShift 14s ease-in-out infinite;
+  }
+  @keyframes gradientShift{
+    0%,100%{ background-position:0% 40%; }
+    50%{ background-position:100% 60%; }
+  }
+
+  /* subtle hover lift for interactive cards */
+  .feature, .t-card, .proc-item, .faq-item, .steps-card, .usp-banner{
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .feature:hover, .t-card:hover{ transform: translateY(-3px); box-shadow: 0 1px 2px rgba(23,18,29,.06), 0 14px 26px -14px color-mix(in srgb, var(--ig-3) 35%, transparent); }
+  .proc-box{ transition: transform .2s ease; }
+  .proc-item:hover .proc-box{ transform: translateY(-2px) scale(1.04); }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .hero::before, .cta-final::before{ animation:none; }
+    .feature, .t-card, .proc-item, .faq-item, .steps-card, .usp-banner, .proc-box{ transition:none; }
+    .feature:hover, .t-card:hover{ transform:none; }
+    .proc-item:hover .proc-box{ transform:none; }
+  }
+</style>
+
+<a class="skip-link" href="#top">Перейти к содержимому</a>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="logo" href="#top">net<span>gramm</span></a>
+    <a class="btn btn-primary btn-sm" href="https://t.me/REPLACE_USERNAME" target="_blank" rel="noopener">Написать в Telegram</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">восстановление доступа · instagram &amp; facebook</span>
+        <h1>Заблокировали аккаунт?<br>Мы восстановим доступ — а <span class="grad-text">платите только после результата</span>.</h1>
+        <p class="hero-sub">Пришлите ссылку на аккаунт и скриншот блокировки — специалист лично разберётся в причине, а современные ИИ-инструменты ускорят диагностику. Работаем с личными профилями, бизнес-страницами, рекламными кабинетами и аккаунтами блогеров.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://t.me/REPLACE_USERNAME" target="_blank" rel="noopener">Написать в Telegram →</a>
+          <span class="hero-note">Отвечаем лично, без ботов.<br>Нужна только ссылка на аккаунт и скриншот блокировки.</span>
+        </div>
+        <div class="usp-banner">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/><path d="M9.5 13.5l2 2 4-4"/></svg>
+          <div>
+            <strong>Вам не нужно ничего делать — только прислать ссылку</strong>
+            <span>Не нужно собирать документы или писать в поддержку самим. Мы всё сделаем сами и свяжемся с вами только в Telegram. Платите, только когда снова сможете войти в аккаунт.</span>
+          </div>
+        </div>
+        <div class="usp-banner">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+          <div>
+            <strong>Быстрее и надёжнее, чем обычная поддержка</strong>
+            <span>Пока другие неделями ждут ответа от техподдержки платформы, мы используем собственную ИИ-систему на базе Claude и GPT — она ускоряет диагностику причины и подготовку обращения.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-card">
+        <div class="steps-card-head">
+          <h3>Как проходит заявка</h3>
+          <span class="badge">без предоплаты</span>
+        </div>
+        <div class="step-row">
+          <span class="step-num">1</span>
+          <div><h4>Пришлите ссылку</h4><p>Ссылка на аккаунт + скриншот блокировки в Telegram</p></div>
+        </div>
+        <div class="step-row">
+          <span class="step-num">2</span>
+          <div><h4>Мы разблокируем</h4><p>Специалист и ИИ-диагностика определяют причину и восстанавливают доступ</p></div>
+        </div>
+        <div class="step-row is-highlight">
+          <span class="step-num">3</span>
+          <div><h4>Платите после результата</h4><p>Оплата только когда доступ к аккаунту у вас на руках</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">как это работает</span>
+      <h2>Пять шагов от блокировки до доступа</h2>
+    </div>
+    <div class="process">
+      <div class="proc-item">
+        <div class="proc-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 6.5l11 11"/></svg>
+        </div>
+        <span class="proc-n">№1</span>
+        <h3>Бан</h3>
+        <p>Ваш аккаунт заблокирован по какой-либо причине</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H10l-4 3v-3H4z"/></svg>
+        </div>
+        <span class="proc-n">№2</span>
+        <h3>Обращение</h3>
+        <p>Пишете нам в Telegram, присылаете ссылку и скриншот блокировки</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 3.5L20 11l-8.5 8.5L4 12V4h8z"/><circle cx="8.2" cy="8.2" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <span class="proc-n">№3</span>
+        <h3>Диагностика</h3>
+        <p>Специалист определяет точную причину и сроки разблокировки</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.4-2"/></svg>
+        </div>
+        <span class="proc-n">№4</span>
+        <h3>Разблокировка</h3>
+        <p>Восстанавливаем доступ и сообщаем вам об этом</p>
+      </div>
+      <div class="proc-item is-highlight">
+        <div class="proc-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10.5h18"/><path d="M6.5 15h4"/></svg>
+        </div>
+        <span class="proc-n">№5</span>
+        <h3>Оплата</h3>
+        <p>Платите только после результата — оплата постфактум</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">что входит в работу</span>
+      <h2>Полный цикл восстановления, не только «нажать кнопку»</h2>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
+        <h3>Диагностика причины</h3>
+        <p>Разбираем, что именно привело к блокировке — правило сообщества, подозрительная активность, жалоба или взлом. Используем собственную ИИ-систему на базе Claude и GPT для быстрого и точного анализа.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>
+        <h3>Подготовка обращения</h3>
+        <p>Готовим официальное обращение в поддержку платформы с помощью собственной ИИ-системы на базе Claude и GPT — быстрее и надёжнее, чем вручную, пока другие неделями ждут ответа.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.6"/><path d="M6 15c.6-1.4 1.8-2 2.5-2s1.9.6 2.5 2M14 9h4M14 13h4"/></svg>
+        <h3>Верификация личности</h3>
+        <p>Помогаем корректно пройти проверку личности, если платформа её запрашивает.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>
+        <h3>Возврат после взлома</h3>
+        <p>Возвращаем доступ, если аккаунт увели через смену пароля, привязанной почты или номера телефона.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+        <h3>Устранение нарушений</h3>
+        <p>Если причина в контенте или поведении — помогаем привести аккаунт в соответствие правилам платформы.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9.5 12l1.8 1.8L15 10.3"/></svg>
+        <h3>Настройка защиты</h3>
+        <p>После восстановления помогаем включить двухфакторную аутентификацию, чтобы блокировка не повторилась.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap form-section">
+    <div class="section-head">
+      <span class="eyebrow">заявка</span>
+      <h2>Заполните форму</h2>
+      <p>Чтобы мы могли помочь, оставьте немного информации — при необходимости специалист уточнит детали лично в Telegram.</p>
+    </div>
+    <form class="form-card" id="lead-form">
+      <div class="field">
+        <label class="field-label" for="f-insta">Ссылка на аккаунт или @username в Instagram</label>
+        <input id="f-insta" name="insta" type="text" autocomplete="off" spellcheck="false" placeholder="@instagram профиль" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="f-reason">Возможная причина блокировки <span class="opt">(необязательно)</span></label>
+        <textarea id="f-reason" name="reason" placeholder="Например: не понимаю причину, пришло письмо о нарушении правил…"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+      <span class="form-status" id="f-status" aria-live="polite"></span>
+      <a class="form-consent" href="#">Соглашение об обработке персональных данных</a>
+    </form>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">без риска</span>
+      <h2>Платите за результат, а не за попытку</h2>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Без предоплаты</h3>
+        <p>Мы начинаем работу до того, как вы заплатите. Сумма фиксируется заранее и не меняется.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>
+        <h3>Прозрачные условия</h3>
+        <p>Стоимость и сроки называем до начала работы, по видимой сложности случая — без скрытых доплат.</p>
+      </div>
+      <div class="feature">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+        <h3>Любая сложность</h3>
+        <p>Личные профили, бизнес-страницы, рекламные кабинеты и взломанные аккаунты — берём даже сложные случаи.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">частые причины блокировки</span>
+      <h2>Узнаёте свой случай?</h2>
+    </div>
+    <div class="pills">
+      <span class="pill">Нарушение правил сообщества</span>
+      <span class="pill">Подозрительная активность / бот-фильтр</span>
+      <span class="pill">Жалоба на копирайт</span>
+      <span class="pill">Жалоба на выдачу за другого человека</span>
+      <span class="pill">Взлом — сменили пароль, почту или телефон</span>
+      <span class="pill">Запрос подтверждения личности или возраста</span>
+      <span class="pill">Блокировка рекламного кабинета</span>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">кому подходит</span>
+      <h2>С кем мы работаем</h2>
+    </div>
+    <div class="pills">
+      <span class="pill">Бизнес-аккаунты</span>
+      <span class="pill">Блогеры и инфлюэнсеры</span>
+      <span class="pill">Рекламные кабинеты</span>
+      <span class="pill">Личные профили</span>
+      <span class="pill">Взлом и потеря доступа</span>
+      <span class="pill">Удалённые аккаунты</span>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">отзывы</span>
+      <h2>Что говорят клиенты</h2>
+    </div>
+    <p class="t-note">Пример оформления блока — замените на реальные скрины и отзывы своих клиентов.</p>
+    <div class="testimonials">
+      <div class="t-card">
+        <div class="t-top">
+          <span class="avatar">М</span>
+          <div><div class="t-name">Марина</div><div class="t-handle">владелица шоурума одежды</div></div>
+        </div>
+        <p class="t-body">Аккаунт с 40к подписчиков заблокировали без причины. Восстановили на пятый день, оплатила только когда снова смогла зайти.</p>
+        <span class="t-tag">доступ восстановлен · 5 дней</span>
+      </div>
+      <div class="t-card">
+        <div class="t-top">
+          <span class="avatar">Д</span>
+          <div><div class="t-name">Данияр</div><div class="t-handle">блогер, travel-контент</div></div>
+        </div>
+        <p class="t-body">Думал, аккаунт потерян навсегда после взлома. Прислал скрины и ссылку — через неделю вернул доступ и сменил пароль.</p>
+        <span class="t-tag">доступ восстановлен · 7 дней</span>
+      </div>
+      <div class="t-card">
+        <div class="t-top">
+          <span class="avatar">А</span>
+          <div><div class="t-name">Алина</div><div class="t-handle">маркетолог, рекламный кабинет</div></div>
+        </div>
+        <p class="t-body">Заблокировали рекламный кабинет вместе с личным профилем. Разобрались с обоими, объяснили, что было причиной.</p>
+        <span class="t-tag">доступ восстановлен · 4 дня</span>
+      </div>
+      <div class="t-card">
+        <div class="t-top">
+          <span class="avatar">С</span>
+          <div><div class="t-name">Сергей</div><div class="t-handle">владелец сервиса доставки</div></div>
+        </div>
+        <p class="t-body">Оплата по факту сняла все сомнения — терять было нечего. В итоге всё честно: сделали работу, потом выставили счёт.</p>
+        <span class="t-tag">доступ восстановлен · 6 дней</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head" style="text-align:center;margin-inline:auto;">
+      <span class="eyebrow">вопросы</span>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      <details class="faq-item">
+        <summary>Нужно ли давать вам пароль от аккаунта?</summary>
+        <div class="faq-body">Нет, ничего давать не нужно. Пароль или доступ к аккаунту от вас не требуется — от вас нужна только ссылка на аккаунт.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Сколько стоит разблокировка?</summary>
+        <div class="faq-body">Стоимость индивидуальная и зависит от причины блокировки и количества подписчиков. Точную сумму называем до начала работы.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Что если аккаунт не удастся вернуть?</summary>
+        <div class="faq-body">Если восстановить доступ не получится, вы ничего не теряете — оплата берётся только за результат.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Сколько занимает восстановление?</summary>
+        <div class="faq-body">В среднем 7–8 дней. Точный срок зависит от сложности случая.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Работаете ли с другими соцсетями?</summary>
+        <div class="faq-body">Работаем с любой социальной сетью, но преимущественно с Instagram.</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="cta-final">
+      <span class="eyebrow" style="margin-bottom:0">готовы начать</span>
+      <h2>Пришлите ссылку на аккаунт — мы разблокируем</h2>
+      <p>Никакой предоплаты. Оцениваем случай бесплатно и называем стоимость до начала работы — платите, только когда доступ будет у вас на руках.</p>
+      <a class="btn btn-primary" href="https://t.me/REPLACE_USERNAME" target="_blank" rel="noopener">Написать в Telegram →</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span class="logo" style="font-size:.9rem;">net<span>gramm</span></span>
+    <span>Сервис не аффилирован с Meta Platforms Inc.</span>
+    <span>* Meta Platforms Inc., а также принадлежащие ей Instagram и Facebook, признаны экстремистской организацией, их деятельность запрещена на территории Российской Федерации.</span>
+    <span>© 2026 netgramm</span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('lead-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var insta = document.getElementById('f-insta').value.trim();
+    var reason = document.getElementById('f-reason').value.trim();
+    var status = document.getElementById('f-status');
+
+    if (!insta) {
+      status.style.color = 'var(--danger)';
+      status.textContent = 'Укажите профиль Instagram.';
+      return;
+    }
+
+    var lines = [
+      'Новая заявка с сайта netgramm',
+      'Instagram: ' + insta
+    ];
+    if (reason) lines.push('Причина блокировки: ' + reason);
+
+    var text = encodeURIComponent(lines.join('\n'));
+    window.open('https://t.me/REPLACE_USERNAME?text=' + text, '_blank', 'noopener');
+
+    status.style.color = 'var(--success)';
+    status.textContent = 'Открываем Telegram — останется нажать «Отправить» в чате.';
+  });
+</script>
+
+<script>
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    var groupSelectors = ['.process', '.features', '.testimonials', '.faq', '.pills'];
+    groupSelectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(group){
+        Array.prototype.forEach.call(group.children, function(child, i){
+          child.classList.add('reveal');
+          child.style.setProperty('--reveal-delay', Math.min(i * 70, 350) + 'ms');
+        });
+      });
+    });
+
+    var singleSelectors = ['.section-head', '.steps-card', '.usp-banner', '.cta-final', '.hero-grid > div'];
+    singleSelectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){ el.classList.add('reveal'); });
+    });
+
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+  })();
+</script>
+
+</body></html>
