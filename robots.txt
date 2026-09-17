@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://netgramm-site.vercel.app/sitemap.xml
+Sitemap: https://xn--80aff4aabxo.tech/sitemap.xml
